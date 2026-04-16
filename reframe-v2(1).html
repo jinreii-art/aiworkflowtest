@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>REFRAME — 서명이 데이터가 되고, 데이터가 정책이 된다</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;900&family=Bebas+Neue&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cream: #f2ede6;
+  --black: #0d0d0d;
+  --red: #c8282a;
+  --gold: #c9a84c;
+  --warm-gray: #8a8278;
+  --dark-brown: #1a1410;
+  --deep: #111118;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--black);
+  color: var(--cream);
+  font-family: 'Noto Sans KR', sans-serif;
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* CURSOR */
+.cursor { position: fixed; width: 10px; height: 10px; background: var(--red); border-radius: 50%; pointer-events: none; z-index: 9999; transition: transform 0.15s ease; transform: translate(-50%,-50%); }
+.cursor-ring { position: fixed; width: 34px; height: 34px; border: 1px solid rgba(200,40,42,0.45); border-radius: 50%; pointer-events: none; z-index: 9998; transition: width 0.3s, height 0.3s; transform: translate(-50%,-50%); }
+
+/* GRAIN */
+body::before { content:''; position:fixed; inset:0; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events:none; z-index:9000; opacity:0.35; }
+
+/* NAV */
+nav { position:fixed; top:0; left:0; right:0; z-index:500; padding:18px 80px; display:flex; justify-content:space-between; align-items:center; transition: background 0.3s, backdrop-filter 0.3s; }
+.nav-logo { font-family:'Bebas Neue',sans-serif; font-size:26px; letter-spacing:3px; color:var(--cream); text-decoration:none; }
+.nav-logo span { color:var(--red); }
+.nav-links { display:flex; gap:32px; list-style:none; }
+.nav-links a { font-size:11px; letter-spacing:2.5px; color:rgba(242,237,230,0.55); text-decoration:none; font-family:'Bebas Neue',sans-serif; transition:color 0.2s; }
+.nav-links a:hover { color:var(--cream); }
+.nav-counter { display:flex; align-items:center; gap:10px; }
+.nav-sig-count { font-family:'Bebas Neue',sans-serif; font-size:14px; color:var(--gold); letter-spacing:1px; }
+.nav-sig-label { font-size:10px; color:var(--warm-gray); letter-spacing:1px; }
+.nav-cta { background:var(--red); color:var(--cream); padding:10px 22px; font-family:'Bebas Neue',sans-serif; font-size:13px; letter-spacing:2px; text-decoration:none; transition:background 0.2s; }
+.nav-cta:hover { background:#a81e20; }
+
+/* HERO */
+.hero { min-height:100vh; display:grid; grid-template-columns:1fr 1fr; position:relative; overflow:hidden; }
+.hero-film-strip { position:absolute; top:0; bottom:0; left:0; width:52px; display:flex; flex-direction:column; z-index:2; }
+.film-hole { flex:0 0 26px; display:flex; align-items:center; justify-content:center; background:var(--black); border-bottom:1px solid #1e1e1e; }
+.film-hole::after { content:''; width:13px; height:13px; background:#141414; border:2px solid #2a2a2a; border-radius:3px; }
+.hero-left { padding:100px 60px 80px 84px; display:flex; flex-direction:column; justify-content:center; position:relative; z-index:3; }
+.hero-eyebrow { font-family:'Bebas Neue',sans-serif; font-size:12px; letter-spacing:4px; color:var(--red); margin-bottom:30px; display:flex; align-items:center; gap:12px; opacity:0; animation:fadeIn 0.6s 0.5s forwards; }
+.hero-eyebrow::before { content:''; width:28px; height:1px; background:var(--red); }
+.hero-title { font-family:'Bebas Neue',sans-serif; font-size:clamp(68px,8.5vw,132px); line-height:0.92; letter-spacing:-2px; }
+.hero-title-line { overflow:hidden; }
+.hero-title-inner { display:block; transform:translateY(100%); animation:revealUp 0.8s cubic-bezier(0.16,1,0.3,1) forwards; }
+.hero-title-line:nth-child(1) .hero-title-inner { animation-delay:0.1s; }
+.hero-title-line:nth-child(2) .hero-title-inner { animation-delay:0.22s; color:var(--red); }
+.hero-title-line:nth-child(3) .hero-title-inner { animation-delay:0.34s; color:var(--gold); }
+@keyframes revealUp { to { transform:translateY(0); } }
+@keyframes fadeIn { to { opacity:1; } }
+.hero-subtitle { font-family:'Noto Serif KR',serif; font-size:clamp(13px,1.5vw,18px); font-weight:300; color:var(--warm-gray); margin-top:28px; line-height:1.9; max-width:400px; opacity:0; animation:fadeIn 0.8s 0.65s forwards; }
+.hero-thesis { margin-top:24px; padding:20px 24px; border-left:2px solid var(--red); background:rgba(200,40,42,0.06); opacity:0; animation:fadeIn 0.8s 0.8s forwards; }
+.hero-thesis p { font-size:13px; color:rgba(242,237,230,0.75); line-height:1.8; }
+.hero-thesis strong { color:var(--cream); font-weight:500; }
+.hero-cta-row { display:flex; gap:14px; margin-top:40px; align-items:center; flex-wrap:wrap; opacity:0; animation:fadeIn 0.8s 0.9s forwards; }
+.btn-primary { background:var(--red); color:var(--cream); border:none; padding:15px 34px; font-family:'Bebas Neue',sans-serif; font-size:17px; letter-spacing:2px; cursor:pointer; transition:background 0.2s, transform 0.2s; text-decoration:none; display:inline-block; }
+.btn-primary:hover { background:#a81e20; transform:translateY(-2px); }
+.btn-secondary { color:var(--cream); border:1px solid rgba(242,237,230,0.25); padding:15px 34px; font-family:'Bebas Neue',sans-serif; font-size:17px; letter-spacing:2px; cursor:pointer; transition:all 0.2s; text-decoration:none; display:inline-block; background:transparent; }
+.btn-secondary:hover { border-color:var(--gold); color:var(--gold); }
+
+/* HERO RIGHT */
+.hero-right { position:relative; overflow:hidden; }
+.hero-right-bg { position:absolute; inset:0; background:linear-gradient(135deg,rgba(200,40,42,0.07) 0%,transparent 55%), repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(255,255,255,0.012) 3px,rgba(255,255,255,0.012) 4px); }
+.stat-cards { position:absolute; inset:0; display:flex; flex-direction:column; justify-content:center; padding:80px 52px 60px 36px; gap:16px; }
+.stat-card { border:1px solid rgba(255,255,255,0.07); padding:20px 24px; background:rgba(13,13,13,0.65); backdrop-filter:blur(4px); transition:border-color 0.3s; opacity:0; transform:translateX(40px); animation:slideIn 0.6s forwards; position:relative; overflow:hidden; }
+.stat-card:nth-child(1){animation-delay:0.2s}.stat-card:nth-child(2){animation-delay:0.35s}.stat-card:nth-child(3){animation-delay:0.5s}.stat-card:nth-child(4){animation-delay:0.65s}
+@keyframes slideIn { to { opacity:1; transform:translateX(0); } }
+.stat-card::before { content:''; position:absolute; left:0; top:0; bottom:0; width:3px; background:var(--red); transform:scaleY(0); transform-origin:bottom; transition:transform 0.3s; }
+.stat-card:hover { border-color:rgba(200,40,42,0.35); }
+.stat-card:hover::before { transform:scaleY(1); }
+.stat-num { font-family:'Bebas Neue',sans-serif; font-size:46px; color:var(--cream); line-height:1; }
+.stat-num span { color:var(--red); }
+.stat-label { font-size:11px; color:var(--warm-gray); margin-top:4px; letter-spacing:0.5px; line-height:1.6; }
+.stat-detail { font-size:10px; color:rgba(138,130,120,0.55); margin-top:3px; }
+.scroll-hint { position:absolute; bottom:36px; left:84px; z-index:4; display:flex; align-items:center; gap:10px; font-size:10px; letter-spacing:3px; color:var(--warm-gray); font-family:'Bebas Neue',sans-serif; animation:float 2s ease-in-out infinite; }
+.scroll-line { width:1px; height:44px; background:linear-gradient(to bottom,transparent,var(--gold)); animation:pulseAnim 2s ease-in-out infinite; }
+@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(6px)} }
+@keyframes pulseAnim { 0%,100%{opacity:0.35} 50%{opacity:1} }
+
+/* SIGNATURE BANNER */
+.sig-banner { background:var(--dark-brown); border-top:1px solid rgba(200,40,42,0.2); border-bottom:1px solid rgba(200,40,42,0.2); padding:28px 80px; display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:40px; }
+.sig-main { display:flex; align-items:baseline; gap:16px; }
+.sig-number { font-family:'Bebas Neue',sans-serif; font-size:72px; color:var(--cream); line-height:1; }
+.sig-number span { color:var(--red); }
+.sig-unit { font-family:'Bebas Neue',sans-serif; font-size:18px; color:var(--warm-gray); letter-spacing:2px; }
+.sig-bar-wrap { }
+.sig-bar-label { font-size:11px; color:var(--warm-gray); letter-spacing:1px; margin-bottom:8px; display:flex; justify-content:space-between; }
+.sig-bar-label span { color:var(--gold); font-family:'Bebas Neue',sans-serif; font-size:14px; }
+.sig-bar-track { height:4px; background:rgba(255,255,255,0.08); position:relative; width:100%; min-width:300px; }
+.sig-bar-fill { height:100%; background:linear-gradient(to right,var(--red),var(--gold)); width:0%; transition:width 2s cubic-bezier(0.16,1,0.3,1); }
+.sig-milestone { font-size:11px; color:var(--warm-gray); margin-top:8px; }
+.sig-milestone strong { color:var(--gold); }
+.sig-impact { text-align:right; }
+.sig-impact-text { font-family:'Noto Serif KR',serif; font-size:13px; color:var(--warm-gray); line-height:1.8; }
+.sig-impact-text em { color:var(--cream); font-style:normal; }
+
+/* SECTION COMMON */
+.section-divider { height:1px; background:linear-gradient(to right,transparent,rgba(200,40,42,0.3),transparent); }
+.section-tag { font-family:'Bebas Neue',sans-serif; font-size:11px; letter-spacing:5px; color:var(--red); margin-bottom:18px; display:flex; align-items:center; gap:12px; }
+.section-tag::after { content:''; flex:0 0 36px; height:1px; background:var(--red); }
+.fade-up { opacity:0; transform:translateY(28px); transition:opacity 0.7s ease,transform 0.7s ease; }
+.fade-up.visible { opacity:1; transform:translateY(0); }
+
+/* DIAGNOSIS */
+.diagnosis { background:var(--cream); color:var(--black); padding:120px 80px; overflow:hidden; }
+.diagnosis-headline { font-family:'Noto Serif KR',serif; font-size:clamp(30px,3.8vw,56px); font-weight:900; line-height:1.2; max-width:660px; margin-bottom:72px; }
+.diagnosis-headline em { font-style:normal; color:var(--red); }
+.problems-grid { display:grid; grid-template-columns:repeat(3,1fr); border:1px solid rgba(13,13,13,0.1); }
+.problem-cell { padding:36px 32px; border-right:1px solid rgba(13,13,13,0.1); border-bottom:1px solid rgba(13,13,13,0.1); position:relative; transition:background 0.3s; }
+.problem-cell:nth-child(3n){border-right:none}
+.problem-cell:hover{background:rgba(200,40,42,0.04)}
+.problem-number { font-family:'Bebas Neue',sans-serif; font-size:56px; color:rgba(13,13,13,0.07); line-height:1; position:absolute; top:16px; right:20px; }
+.problem-icon { width:36px; height:36px; border:1px solid var(--red); display:flex; align-items:center; justify-content:center; margin-bottom:16px; font-size:16px; }
+.problem-title { font-family:'Noto Serif KR',serif; font-size:17px; font-weight:600; margin-bottom:10px; }
+.problem-desc { font-size:12px; color:#555; line-height:1.9; }
+.problem-data { margin-top:14px; padding-top:14px; border-top:1px solid rgba(13,13,13,0.08); font-family:'Bebas Neue',sans-serif; font-size:18px; color:var(--red); }
+.problem-data small { font-family:'Noto Sans KR',sans-serif; font-size:10px; color:#888; display:block; font-weight:300; }
+
+/* SOLUTIONS */
+.solutions { background:var(--dark-brown); padding:120px 80px; position:relative; overflow:hidden; }
+.solutions::before { content:'REFRAME'; position:absolute; font-family:'Bebas Neue',sans-serif; font-size:280px; color:rgba(255,255,255,0.013); top:50%; left:50%; transform:translate(-50%,-50%); white-space:nowrap; pointer-events:none; letter-spacing:-8px; }
+.solutions-header { display:grid; grid-template-columns:1fr 1fr; gap:72px; margin-bottom:72px; align-items:end; }
+.solutions-headline { font-family:'Noto Serif KR',serif; font-size:clamp(26px,3.2vw,48px); font-weight:900; line-height:1.25; color:var(--cream); }
+.solutions-headline .accent { color:var(--gold); }
+.solutions-intro { font-size:13px; color:var(--warm-gray); line-height:2; }
+.solutions-list { display:flex; flex-direction:column; gap:2px; }
+.solution-item { display:grid; grid-template-columns:72px 1fr 180px; align-items:center; padding:28px 36px; background:rgba(255,255,255,0.022); border:1px solid rgba(255,255,255,0.05); transition:all 0.3s; cursor:pointer; position:relative; overflow:hidden; }
+.solution-item::after { content:''; position:absolute; inset:0; background:linear-gradient(90deg,transparent,rgba(200,40,42,0.055)); opacity:0; transition:opacity 0.3s; }
+.solution-item:hover { border-color:rgba(200,40,42,0.28); }
+.solution-item:hover::after { opacity:1; }
+.solution-num { font-family:'Bebas Neue',sans-serif; font-size:32px; color:rgba(200,40,42,0.35); }
+.solution-body { padding:0 20px; }
+.solution-title { font-family:'Noto Serif KR',serif; font-size:18px; font-weight:600; color:var(--cream); margin-bottom:6px; }
+.solution-desc { font-size:12px; color:var(--warm-gray); line-height:1.8; }
+.solution-tag { text-align:right; font-family:'Bebas Neue',sans-serif; font-size:11px; letter-spacing:2px; color:var(--gold); opacity:0.65; }
+.featured-solution { margin-top:52px; background:linear-gradient(135deg,rgba(200,40,42,0.1),rgba(201,168,76,0.07)); border:1px solid rgba(200,40,42,0.22); padding:52px; display:grid; grid-template-columns:1fr 2fr; gap:52px; align-items:center; }
+.featured-label { font-family:'Bebas Neue',sans-serif; font-size:10px; letter-spacing:4px; color:var(--red); margin-bottom:16px; }
+.featured-title { font-family:'Noto Serif KR',serif; font-size:clamp(22px,2.8vw,38px); font-weight:900; color:var(--cream); line-height:1.3; }
+.featured-desc { font-size:13px; color:var(--warm-gray); line-height:2; }
+.featured-tags { display:flex; flex-wrap:wrap; gap:7px; margin-top:20px; }
+.tag { border:1px solid rgba(255,255,255,0.13); padding:5px 12px; font-size:10px; letter-spacing:1px; color:var(--warm-gray); font-family:'Bebas Neue',sans-serif; }
+
+/* ONBOARDING — what happens after you sign */
+.onboarding { background:var(--black); padding:120px 80px; }
+.onboarding-header { display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:start; margin-bottom:72px; }
+.onboarding-headline { font-family:'Noto Serif KR',serif; font-size:clamp(28px,3.5vw,52px); font-weight:900; line-height:1.2; }
+.onboarding-headline em { font-style:normal; color:var(--red); }
+.onboarding-lead { font-size:13px; color:var(--warm-gray); line-height:2; padding-top:8px; }
+.onboarding-lead strong { color:var(--cream); font-weight:500; }
+
+.role-tabs { display:flex; gap:0; margin-bottom:0; border-bottom:1px solid rgba(255,255,255,0.07); }
+.role-tab { padding:14px 28px; font-family:'Bebas Neue',sans-serif; font-size:14px; letter-spacing:2px; color:rgba(242,237,230,0.4); cursor:pointer; border:none; background:transparent; border-bottom:2px solid transparent; margin-bottom:-1px; transition:all 0.2s; }
+.role-tab:hover { color:var(--cream); }
+.role-tab.active { color:var(--cream); border-bottom-color:var(--red); }
+
+.onboarding-panel { display:none; padding:0; }
+.onboarding-panel.active { display:grid; grid-template-columns:1fr 1fr; gap:0; border:1px solid rgba(255,255,255,0.06); border-top:none; }
+
+.panel-journey { padding:48px; border-right:1px solid rgba(255,255,255,0.06); }
+.panel-journey-title { font-family:'Bebas Neue',sans-serif; font-size:12px; letter-spacing:4px; color:var(--warm-gray); margin-bottom:32px; }
+.journey-step { display:flex; gap:20px; margin-bottom:28px; position:relative; }
+.journey-step::before { content:''; position:absolute; left:18px; top:36px; bottom:-28px; width:1px; background:rgba(255,255,255,0.07); }
+.journey-step:last-child::before { display:none; }
+.step-num { flex:0 0 36px; height:36px; border:1px solid rgba(200,40,42,0.4); display:flex; align-items:center; justify-content:center; font-family:'Bebas Neue',sans-serif; font-size:16px; color:var(--red); }
+.step-content { padding-top:4px; }
+.step-title { font-size:14px; font-weight:500; color:var(--cream); margin-bottom:4px; }
+.step-desc { font-size:12px; color:var(--warm-gray); line-height:1.8; }
+
+.panel-benefits { padding:48px; background:rgba(255,255,255,0.015); }
+.panel-benefits-title { font-family:'Bebas Neue',sans-serif; font-size:12px; letter-spacing:4px; color:var(--warm-gray); margin-bottom:32px; }
+.benefit-item { display:flex; gap:14px; margin-bottom:20px; align-items:flex-start; }
+.benefit-icon { font-size:18px; flex:0 0 28px; padding-top:2px; }
+.benefit-text { font-size:13px; color:var(--warm-gray); line-height:1.8; }
+.benefit-text strong { color:var(--cream); font-weight:500; display:block; margin-bottom:2px; }
+
+/* CAMPAIGN */
+.campaign { background:var(--cream); color:var(--black); padding:120px 80px; overflow:hidden; }
+.campaign-grid { display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:center; margin-bottom:80px; }
+.campaign-headline { font-family:'Noto Serif KR',serif; font-size:clamp(28px,3.5vw,52px); font-weight:900; line-height:1.2; }
+.campaign-headline em { font-style:normal; color:var(--red); }
+.campaign-desc { font-size:13px; color:#555; line-height:2; margin-top:20px; }
+.campaign-hashtag { font-family:'Bebas Neue',sans-serif; font-size:28px; color:var(--red); letter-spacing:1px; margin-top:20px; display:block; }
+.campaign-cta-note { font-size:11px; color:#888; margin-top:8px; line-height:1.7; }
+
+.testimonials { display:grid; grid-template-columns:1fr; gap:16px; }
+.testimonial { background:white; padding:28px 32px; border:1px solid rgba(13,13,13,0.08); position:relative; transition:box-shadow 0.3s; }
+.testimonial:hover { box-shadow:0 4px 20px rgba(200,40,42,0.08); }
+.testimonial-text { font-family:'Noto Serif KR',serif; font-size:15px; font-weight:300; line-height:1.9; color:#222; }
+.testimonial-meta { display:flex; justify-content:space-between; align-items:center; margin-top:16px; }
+.testimonial-author { font-size:11px; color:#888; letter-spacing:1px; }
+.testimonial-tag { font-family:'Bebas Neue',sans-serif; font-size:11px; color:var(--red); letter-spacing:1px; }
+.testimonial-film { font-size:13px; color:#444; font-weight:500; margin-top:8px; }
+
+.campaign-stats-row { display:grid; grid-template-columns:repeat(4,1fr); gap:0; border:1px solid rgba(13,13,13,0.1); }
+.cstat { padding:32px; border-right:1px solid rgba(13,13,13,0.1); text-align:center; }
+.cstat:last-child{border-right:none}
+.cstat-num { font-family:'Bebas Neue',sans-serif; font-size:48px; color:var(--red); }
+.cstat-label { font-size:11px; color:#888; margin-top:4px; letter-spacing:0.5px; }
+
+/* MEMBERSHIP */
+.membership { background:var(--dark-brown); padding:120px 80px; }
+.membership-header { text-align:center; margin-bottom:72px; }
+.membership-headline { font-family:'Noto Serif KR',serif; font-size:clamp(28px,3.5vw,52px); font-weight:900; line-height:1.2; color:var(--cream); }
+.membership-headline em { font-style:normal; color:var(--gold); }
+.membership-sub { font-size:13px; color:var(--warm-gray); margin-top:16px; line-height:1.9; }
+.membership-sub strong { color:var(--cream); }
+
+.plans { display:grid; grid-template-columns:repeat(3,1fr); gap:2px; }
+.plan { padding:48px 40px; background:rgba(255,255,255,0.025); border:1px solid rgba(255,255,255,0.05); position:relative; transition:all 0.3s; }
+.plan:hover { border-color:rgba(201,168,76,0.25); background:rgba(255,255,255,0.04); }
+.plan.featured { background:rgba(200,40,42,0.09); border-color:rgba(200,40,42,0.3); }
+.plan-badge { position:absolute; top:20px; right:20px; background:var(--red); color:var(--cream); padding:4px 12px; font-family:'Bebas Neue',sans-serif; font-size:11px; letter-spacing:2px; }
+.plan-name { font-family:'Bebas Neue',sans-serif; font-size:22px; letter-spacing:3px; color:var(--warm-gray); margin-bottom:8px; }
+.plan-price { font-family:'Bebas Neue',sans-serif; font-size:52px; color:var(--cream); line-height:1; }
+.plan-price span { font-size:18px; color:var(--warm-gray); }
+.plan-period { font-size:11px; color:var(--warm-gray); margin-top:4px; margin-bottom:32px; }
+.plan-divider { height:1px; background:rgba(255,255,255,0.07); margin-bottom:28px; }
+.plan-features { list-style:none; }
+.plan-features li { font-size:13px; color:var(--warm-gray); padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.04); display:flex; gap:10px; align-items:flex-start; line-height:1.6; }
+.plan-features li::before { content:'→'; color:var(--gold); flex:0 0 16px; font-family:'Bebas Neue',sans-serif; }
+.plan-features li.highlight { color:var(--cream); }
+.plan-btn { margin-top:32px; width:100%; background:transparent; border:1px solid rgba(255,255,255,0.15); color:var(--cream); padding:14px; font-family:'Bebas Neue',sans-serif; font-size:15px; letter-spacing:2px; cursor:pointer; transition:all 0.2s; }
+.plan-btn:hover { border-color:var(--gold); color:var(--gold); }
+.plan.featured .plan-btn { background:var(--red); border-color:var(--red); }
+.plan.featured .plan-btn:hover { background:#a81e20; border-color:#a81e20; color:var(--cream); }
+
+.membership-note { text-align:center; margin-top:36px; font-size:12px; color:var(--warm-gray); line-height:1.8; }
+.membership-note strong { color:var(--gold); }
+
+/* POLICY */
+.policy-track { background:var(--black); padding:120px 80px; }
+.policy-header { display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:start; margin-bottom:72px; }
+.policy-headline { font-family:'Noto Serif KR',serif; font-size:clamp(28px,3.5vw,52px); font-weight:900; line-height:1.2; }
+.policy-headline em { font-style:normal; color:var(--red); }
+.policy-lead { font-size:13px; color:var(--warm-gray); line-height:2; }
+.policy-lead strong { color:var(--cream); font-weight:500; }
+
+.policy-steps { display:grid; grid-template-columns:repeat(3,1fr); gap:0; border:1px solid rgba(255,255,255,0.06); }
+.policy-step { padding:40px 36px; border-right:1px solid rgba(255,255,255,0.06); position:relative; }
+.policy-step:last-child { border-right:none; }
+.policy-step-arrow { position:absolute; right:-14px; top:50%; transform:translateY(-50%); font-family:'Bebas Neue',sans-serif; font-size:20px; color:rgba(200,40,42,0.3); z-index:1; }
+.policy-step:last-child .policy-step-arrow { display:none; }
+.policy-step-num { font-family:'Bebas Neue',sans-serif; font-size:64px; color:rgba(255,255,255,0.04); line-height:1; margin-bottom:20px; }
+.policy-step-title { font-family:'Noto Serif KR',serif; font-size:18px; font-weight:600; color:var(--cream); margin-bottom:12px; }
+.policy-step-desc { font-size:12px; color:var(--warm-gray); line-height:1.9; }
+.policy-step-detail { margin-top:20px; padding:16px; background:rgba(255,255,255,0.03); border-left:2px solid rgba(200,40,42,0.3); }
+.policy-step-detail p { font-size:11px; color:rgba(138,130,120,0.8); line-height:1.8; }
+.policy-step-detail strong { color:var(--gold); font-size:12px; }
+
+.intl-row { margin-top:52px; padding:48px; border:1px solid rgba(255,255,255,0.06); background:rgba(255,255,255,0.02); display:grid; grid-template-columns:auto 1fr; gap:52px; align-items:center; }
+.intl-title { font-family:'Bebas Neue',sans-serif; font-size:11px; letter-spacing:4px; color:var(--warm-gray); margin-bottom:16px; }
+.intl-flags { display:flex; gap:8px; flex-wrap:wrap; }
+.intl-flag { padding:8px 16px; border:1px solid rgba(255,255,255,0.1); font-family:'Bebas Neue',sans-serif; font-size:13px; letter-spacing:1px; color:rgba(242,237,230,0.5); }
+.intl-flag.active { border-color:rgba(200,40,42,0.35); color:var(--cream); }
+.intl-desc { font-size:13px; color:var(--warm-gray); line-height:2; }
+.intl-desc strong { color:var(--cream); font-weight:500; }
+
+/* VISION */
+.vision { background:var(--deep); padding:140px 80px; text-align:center; position:relative; overflow:hidden; }
+.vision-bg-lines { position:absolute; inset:0; background:repeating-linear-gradient(90deg,transparent,transparent calc(10vw - 1px),rgba(255,255,255,0.02) calc(10vw - 1px),rgba(255,255,255,0.02) 10vw); pointer-events:none; }
+.vision-content { position:relative; z-index:2; }
+.vision-tagline { font-family:'Bebas Neue',sans-serif; font-size:clamp(44px,6.5vw,110px); line-height:0.95; letter-spacing:-2px; margin:36px 0; }
+.vision-tagline .w1 { color:var(--cream); }
+.vision-tagline .w2 { color:var(--red); }
+.vision-tagline .w3 { color:transparent; -webkit-text-stroke:1px rgba(242,237,230,0.28); }
+.vision-body { max-width:600px; margin:0 auto 52px; font-size:15px; color:var(--warm-gray); line-height:2.1; font-family:'Noto Serif KR',serif; font-weight:300; }
+
+/* ROADMAP */
+.roadmap { background:var(--cream); color:var(--black); padding:120px 80px; }
+.timeline { position:relative; margin-top:72px; }
+.timeline::before { content:''; position:absolute; left:96px; top:0; bottom:0; width:1px; background:linear-gradient(to bottom,var(--red),var(--gold)); }
+.timeline-item { display:grid; grid-template-columns:192px 1fr; gap:36px; margin-bottom:52px; position:relative; }
+.timeline-time { text-align:right; padding-right:36px; position:relative; }
+.timeline-time::after { content:''; position:absolute; right:-5px; top:8px; width:10px; height:10px; background:var(--red); border-radius:50%; border:2px solid var(--cream); box-shadow:0 0 0 1px var(--red); }
+.timeline-phase { font-family:'Bebas Neue',sans-serif; font-size:24px; color:var(--red); }
+.timeline-period { font-size:11px; color:var(--warm-gray); margin-top:3px; }
+.timeline-content { padding-top:3px; }
+.timeline-title { font-family:'Noto Serif KR',serif; font-size:19px; font-weight:600; margin-bottom:10px; }
+.timeline-desc { font-size:12px; color:#555; line-height:1.9; }
+.timeline-pills { display:flex; flex-wrap:wrap; gap:6px; margin-top:14px; }
+.pill { background:rgba(200,40,42,0.07); color:var(--red); padding:4px 10px; font-size:10px; border:1px solid rgba(200,40,42,0.18); }
+
+/* JOIN */
+.join { background:var(--red); color:var(--cream); padding:120px 80px; position:relative; overflow:hidden; }
+.join::before { content:''; position:absolute; inset:0; background:repeating-linear-gradient(45deg,transparent,transparent 20px,rgba(0,0,0,0.035) 20px,rgba(0,0,0,0.035) 21px); }
+.join-content { position:relative; z-index:2; display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:start; }
+.join-left { }
+.join-headline { font-family:'Noto Serif KR',serif; font-size:clamp(30px,3.8vw,60px); font-weight:900; line-height:1.15; }
+.join-sub { font-size:13px; line-height:2; color:rgba(242,237,230,0.7); margin-top:20px; }
+.join-promise { margin-top:36px; }
+.join-promise-title { font-family:'Bebas Neue',sans-serif; font-size:11px; letter-spacing:4px; color:rgba(242,237,230,0.5); margin-bottom:16px; }
+.promise-item { display:flex; gap:14px; align-items:flex-start; margin-bottom:14px; }
+.promise-check { font-size:14px; flex:0 0 20px; padding-top:1px; }
+.promise-text { font-size:12px; line-height:1.8; color:rgba(242,237,230,0.8); }
+.promise-text strong { color:var(--cream); font-weight:500; }
+
+.join-form { }
+.form-row { margin-bottom:14px; }
+.form-row label { display:block; font-size:10px; letter-spacing:2.5px; font-family:'Bebas Neue',sans-serif; margin-bottom:7px; opacity:0.65; }
+.form-row input, .form-row select { width:100%; background:rgba(0,0,0,0.18); border:1px solid rgba(242,237,230,0.22); color:var(--cream); padding:13px 15px; font-size:13px; font-family:'Noto Sans KR',sans-serif; outline:none; transition:border-color 0.2s; appearance:none; }
+.form-row input::placeholder { color:rgba(242,237,230,0.3); }
+.form-row input:focus, .form-row select:focus { border-color:rgba(242,237,230,0.65); }
+.form-row select option { background:var(--black); }
+.join-roles-grid { display:grid; grid-template-columns:1fr 1fr; gap:7px; margin-bottom:14px; }
+.role-btn { border:1px solid rgba(242,237,230,0.2); background:transparent; color:rgba(242,237,230,0.55); padding:11px; font-size:11px; font-family:'Bebas Neue',sans-serif; letter-spacing:1px; cursor:pointer; transition:all 0.2s; text-align:center; }
+.role-btn:hover, .role-btn.active { background:rgba(242,237,230,0.14); color:var(--cream); border-color:var(--cream); }
+
+/* Dynamic role benefit preview */
+.role-preview { margin-bottom:14px; padding:16px; background:rgba(0,0,0,0.15); border-left:2px solid rgba(242,237,230,0.3); min-height:80px; transition:all 0.3s; }
+.role-preview-text { font-size:12px; color:rgba(242,237,230,0.75); line-height:1.8; }
+.role-preview-text strong { color:var(--cream); display:block; margin-bottom:4px; font-size:13px; }
+
+.btn-join { width:100%; background:var(--black); color:var(--cream); border:none; padding:17px; font-family:'Bebas Neue',sans-serif; font-size:18px; letter-spacing:3px; cursor:pointer; transition:background 0.2s; margin-top:6px; }
+.btn-join:hover { background:#1a1a1a; }
+
+/* FOOTER */
+footer { background:var(--dark-brown); padding:60px 80px 40px; display:grid; grid-template-columns:1fr 1fr 1fr; gap:52px; border-top:1px solid rgba(255,255,255,0.04); }
+.footer-brand { font-family:'Bebas Neue',sans-serif; font-size:32px; letter-spacing:2px; }
+.footer-brand span { color:var(--red); }
+.footer-tagline { font-size:11px; color:var(--warm-gray); margin-top:10px; line-height:1.9; }
+.footer-col h4 { font-family:'Bebas Neue',sans-serif; font-size:12px; letter-spacing:3px; color:var(--warm-gray); margin-bottom:18px; }
+.footer-col a { display:block; font-size:12px; color:rgba(242,237,230,0.45); text-decoration:none; margin-bottom:9px; transition:color 0.2s; }
+.footer-col a:hover { color:var(--cream); }
+.footer-bottom { grid-column:1/-1; padding-top:36px; border-top:1px solid rgba(255,255,255,0.04); display:flex; justify-content:space-between; align-items:center; font-size:10px; color:rgba(138,130,120,0.45); }
+
+/* RESPONSIVE */
+@media(max-width:960px) {
+  .hero{grid-template-columns:1fr}.hero-right{display:none}
+  .problems-grid,.solutions-header,.plans,.campaign-grid,.onboarding-header,.policy-header,.join-content,.policy-steps,.campaign-stats-row{grid-template-columns:1fr}
+  .solution-item{grid-template-columns:56px 1fr}.solution-tag{display:none}
+  nav{padding:14px 20px}.nav-links{display:none}
+  .hero-left{padding:90px 20px 60px 72px}
+  .diagnosis,.solutions,.roadmap,.vision,.join,.membership,.campaign,.policy-track,.onboarding{padding:72px 20px}
+  .sig-banner{grid-template-columns:1fr;padding:28px 20px;gap:20px}.sig-impact{text-align:left}
+  footer{grid-template-columns:1fr;padding:40px 20px}
+  .timeline::before{left:56px}.timeline-item{grid-template-columns:110px 1fr}
+  .onboarding-panel.active{grid-template-columns:1fr}
+  .panel-journey{border-right:none;border-bottom:1px solid rgba(255,255,255,0.06)}
+  .featured-solution{grid-template-columns:1fr}
+  .intl-row{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav id="mainNav">
+  <a href="#" class="nav-logo">RE<span>FRAME</span></a>
+  <ul class="nav-links">
+    <li><a href="#diagnosis">진단</a></li>
+    <li><a href="#solutions">전략</a></li>
+    <li><a href="#onboarding">참여 여정</a></li>
+    <li><a href="#campaign">캠페인</a></li>
+    <li><a href="#membership">멤버십</a></li>
+    <li><a href="#roadmap">로드맵</a></li>
+  </ul>
+  <div class="nav-counter">
+    <div>
+      <div class="nav-sig-count" id="navCount">3,847명</div>
+      <div class="nav-sig-label">서명 참여</div>
+    </div>
+    <a href="#join" class="nav-cta">서명하기</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-film-strip" id="filmStrip"></div>
+  <div class="hero-left">
+    <div class="hero-eyebrow">한국 영화 재건 운동 — REFRAME 2025</div>
+    <h1 class="hero-title">
+      <div class="hero-title-line"><span class="hero-title-inner">스크린이</span></div>
+      <div class="hero-title-line"><span class="hero-title-inner">꺼지고</span></div>
+      <div class="hero-title-line"><span class="hero-title-inner">있다</span></div>
+    </h1>
+    <p class="hero-subtitle">관객이 떠났고, 제작비는 폭등했으며, 스트리밍이 극장을 잠식했습니다. 위기는 사실입니다. 그러나 구조를 바꾸면 이야기도 바뀝니다.</p>
+    <div class="hero-thesis">
+      <p><strong>REFRAME의 정체성:</strong> 서명이 데이터가 되고, 데이터가 정책이 되는 시민 압력 기구입니다. 청원과 싱크탱크 사이 어딘가, 영화를 사랑하는 모든 사람이 만드는 운동입니다.</p>
+    </div>
+    <div class="hero-cta-row">
+      <a href="#join" class="btn-primary">지금 서명하기</a>
+      <a href="#onboarding" class="btn-secondary">서명하면 뭐가 달라지나요?</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-right-bg"></div>
+    <div class="stat-cards">
+      <div class="stat-card"><div class="stat-num"><span>-42%</span></div><div class="stat-label">2019년 대비 극장 관객 수</div><div class="stat-detail">코로나 이전 수준 회복 실패</div></div>
+      <div class="stat-card"><div class="stat-num">₩<span>200억+</span></div><div class="stat-label">손익분기점 못 넘긴 대작 평균 제작비</div><div class="stat-detail">고비용 구조 고착화</div></div>
+      <div class="stat-card"><div class="stat-num"><span>OTT</span> 3.2×</div><div class="stat-label">극장 대비 OTT 콘텐츠 소비 증가</div><div class="stat-detail">극장의 본질적 가치 재정립 필요</div></div>
+      <div class="stat-card"><div class="stat-num"><span>18%</span></div><div class="stat-label">2024년 한국영화 극장 점유율</div><div class="stat-detail">역대 최저 수준</div></div>
+    </div>
+  </div>
+  <div class="scroll-hint"><div class="scroll-line"></div>SCROLL</div>
+</section>
+
+<!-- SIGNATURE BANNER -->
+<div class="sig-banner">
+  <div class="sig-main">
+    <div class="sig-number" id="sigNum"><span>3</span>,847</div>
+    <div class="sig-unit">명이<br>서명했습니다</div>
+  </div>
+  <div class="sig-bar-wrap">
+    <div class="sig-bar-label">다음 마일스톤 <span>5,000명</span></div>
+    <div class="sig-bar-track"><div class="sig-bar-fill" id="sigBarFill"></div></div>
+    <div class="sig-milestone">5,000명 달성 시 → <strong>영화진흥위원회 공개 서한 발송</strong> + 주요 언론 배포</div>
+  </div>
+  <div class="sig-impact">
+    <p class="sig-impact-text">
+      서명 하나가 <em>데이터 포인트</em>가 됩니다.<br>
+      1,000개가 쌓이면 <em>압력</em>이 됩니다.<br>
+      5,000개가 쌓이면 <em>정책</em>이 됩니다.
+    </p>
+  </div>
+</div>
+
+<div class="section-divider"></div>
+
+<!-- DIAGNOSIS -->
+<section class="diagnosis" id="diagnosis">
+  <div class="section-tag">문제 진단</div>
+  <h2 class="diagnosis-headline fade-up">한국 영화가 무너지는 데는<br><em>6가지</em> 구조적 이유가 있다</h2>
+  <div class="problems-grid">
+    <div class="problem-cell fade-up">
+      <div class="problem-number">01</div>
+      <div class="problem-icon">🎬</div>
+      <div class="problem-title">스크린 독과점</div>
+      <div class="problem-desc">대형 배급사 소유 멀티플렉스가 흥행 예측작에 스크린을 집중시키며, 다양성 영화와 독립영화가 개봉 첫 주를 버티지 못합니다.</div>
+      <div class="problem-data">상위 3개사<br><small>전체 스크린의 약 90% 점유</small></div>
+    </div>
+    <div class="problem-cell fade-up">
+      <div class="problem-number">02</div>
+      <div class="problem-icon">💸</div>
+      <div class="problem-title">제작비 인플레이션</div>
+      <div class="problem-desc">OTT 경쟁으로 시각효과·배우 출연료가 급등했고, 투자자들은 안전한 장르와 IP에만 자본을 집중합니다.</div>
+      <div class="problem-data">10년 새 2.8배<br><small>한국 영화 평균 제작비 증가율</small></div>
+    </div>
+    <div class="problem-cell fade-up">
+      <div class="problem-number">03</div>
+      <div class="problem-icon">📱</div>
+      <div class="problem-title">OTT 창구 붕괴</div>
+      <div class="problem-desc">극장 개봉 후 OTT까지의 홀드백 기간이 무너지며 "굳이 극장에 갈 이유"가 사라졌습니다.</div>
+      <div class="problem-data">평균 35일<br><small>2024년 OTT 전환 기간 (2019년: 90일+)</small></div>
+    </div>
+    <div class="problem-cell fade-up">
+      <div class="problem-number">04</div>
+      <div class="problem-icon">👥</div>
+      <div class="problem-title">관객층 고령화·이탈</div>
+      <div class="problem-desc">Z세대는 숏폼 소비에 익숙해졌고, 영화는 "2시간 집중"을 요구하는 콘텐츠로 인식되며 진입 장벽이 높아졌습니다.</div>
+      <div class="problem-data">20대 관객<br><small>5년 새 38% 감소</small></div>
+    </div>
+    <div class="problem-cell fade-up">
+      <div class="problem-number">05</div>
+      <div class="problem-icon">📋</div>
+      <div class="problem-title">IP 생태계 부재</div>
+      <div class="problem-desc">한국 영화는 단발성 히트에 의존하며, 유니버스·시리즈·머천다이징 등 장기 수익 구조를 만들지 못하고 있습니다.</div>
+      <div class="problem-data">속편 성공률 12%<br><small>IP 재활용 극히 저조</small></div>
+    </div>
+    <div class="problem-cell fade-up">
+      <div class="problem-number">06</div>
+      <div class="problem-icon">🌍</div>
+      <div class="problem-title">글로벌 수익 구조 미흡</div>
+      <div class="problem-desc">기생충·오징어게임 이후 K-콘텐츠 브랜드가 쌓였지만, 이를 영화 흥행으로 연결하는 체계적 전략이 없습니다.</div>
+      <div class="problem-data">해외 수익 비중 8%<br><small>헐리우드 대비 극히 낮은 수준 (60%+)</small></div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- SOLUTIONS -->
+<section class="solutions" id="solutions">
+  <div class="solutions-header">
+    <div>
+      <div class="section-tag" style="color:var(--gold);">전략 제안</div>
+      <h2 class="solutions-headline fade-up">극장을 <span class="accent">경험으로</span><br>재정의하라</h2>
+    </div>
+    <p class="solutions-intro fade-up">문제는 영화의 소멸이 아닙니다. 극장이 OTT와 경쟁하면서 잃은 건 단순히 관객이 아니라 <strong style="color:var(--cream);">"극장에 와야 할 이유"</strong>입니다. 콘텐츠의 질이 아닌 구조와 생태계를 바꿔야 합니다.</p>
+  </div>
+  <div class="solutions-list fade-up">
+    <div class="solution-item"><div class="solution-num">01</div><div class="solution-body"><div class="solution-title">극장 홀드백 재정립 + 창구 다각화 협약</div><div class="solution-desc">극장·배급사·OTT 3자 협약으로 최소 60일 홀드백을 법제화하고, 대신 OTT에 트레일러·비하인드 독점 공급권을 부여해 상호 마케팅 구조를 만듭니다.</div></div><div class="solution-tag">정책 + 산업</div></div>
+    <div class="solution-item"><div class="solution-num">02</div><div class="solution-body"><div class="solution-title">K-Cinema Universe (KCU) 인큐베이팅</div><div class="solution-desc">공유 세계관을 가진 시리즈 IP를 국가 주도로 기획·투자합니다. 단일 제작사가 아닌 여러 감독이 협업하는 크리에이터 연합 모델을 도입합니다.</div></div><div class="solution-tag">IP 전략</div></div>
+    <div class="solution-item"><div class="solution-num">03</div><div class="solution-body"><div class="solution-title">극장의 이벤트화 — 시네마 익스피리언스</div><div class="solution-desc">상영 전 감독 토크, 몰입형 전시, 굿즈 팝업, 테마 공간으로 극장 방문 자체를 이벤트로 전환합니다. 티켓 한 장은 사회적 이벤트 참여권입니다.</div></div><div class="solution-tag">관객 경험</div></div>
+    <div class="solution-item"><div class="solution-num">04</div><div class="solution-body"><div class="solution-title">Z세대 콘텐츠 퍼널 — 숏폼을 입장권으로</div><div class="solution-desc">영화 공식 채널에서 "영화 속 2분 세계"를 숏폼으로 공개해 숏폼 시청 → 본편 극장 관람으로 이어지는 퍼널을 설계합니다.</div></div><div class="solution-tag">마케팅 혁신</div></div>
+    <div class="solution-item"><div class="solution-num">05</div><div class="solution-body"><div class="solution-title">글로벌 선판매 + 공동제작 펀드</div><div class="solution-desc">한류 브랜드를 활용해 미국·유럽·동남아 배급사와 제작 전 선판매 계약을 맺는 글로벌 공동제작 매칭 플랫폼을 구축합니다.</div></div><div class="solution-tag">글로벌 전략</div></div>
+    <div class="solution-item"><div class="solution-num">06</div><div class="solution-body"><div class="solution-title">스크린 다양성 쿼터 + 독립영화 생존 펀드</div><div class="solution-desc">대형 멀티플렉스에 독립·예술영화 상영 의무 비율을 부과하고, 손실 보전 펀드를 조성합니다.</div></div><div class="solution-tag">정책 + 생태계</div></div>
+  </div>
+  <div class="featured-solution fade-up">
+    <div>
+      <div class="featured-label">핵심 인사이트</div>
+      <div class="featured-title">극장은<br>OTT가 될 수 없다.<br>극장만이 될 수 있다.</div>
+    </div>
+    <div>
+      <p class="featured-desc">극장이 회복하려면 OTT가 줄 수 없는 것—<strong style="color:var(--cream);">물리적 현장성, 집단 감응, 의례적 경험</strong>—을 중심으로 산업 전체가 재편돼야 합니다. 티켓 한 장은 단순 영화 감상이 아닌 사회적 이벤트 참여권이 되어야 합니다.</p>
+      <div class="featured-tags">
+        <span class="tag">경험 경제</span><span class="tag">관객 심리</span><span class="tag">공동체 소비</span><span class="tag">의례적 콘텐츠</span><span class="tag">탈OTT 전략</span><span class="tag">극장 재브랜딩</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ONBOARDING — what changes after you sign -->
+<section class="onboarding" id="onboarding">
+  <div class="onboarding-header">
+    <div>
+      <div class="section-tag">참여 여정</div>
+      <h2 class="onboarding-headline fade-up">서명하면<br><em>실제로</em><br>뭐가 달라지나요?</h2>
+    </div>
+    <p class="onboarding-lead fade-up">
+      REFRAME의 서명은 청원 폼이 아닙니다.<br><br>
+      <strong>서명 → 데이터 → 공신력 → 정책 압력.</strong><br>
+      이 선순환이 실제로 작동하려면 당신의 역할이 구체적으로 정의돼야 합니다.<br><br>
+      역할을 선택하면 당신이 이 운동 안에서 어떻게 연결되는지 보여드립니다.
+    </p>
+  </div>
+
+  <div class="role-tabs" id="roleTabs">
+    <button class="role-tab active" data-panel="audience">관객 / 팬</button>
+    <button class="role-tab" data-panel="filmmaker">영화인 / 기획자</button>
+    <button class="role-tab" data-panel="policy">정책 / 학계</button>
+    <button class="role-tab" data-panel="investor">투자자 / 사업가</button>
+    <button class="role-tab" data-panel="student">대학생 / Z세대</button>
+  </div>
+
+  <!-- AUDIENCE -->
+  <div class="onboarding-panel active" id="panel-audience">
+    <div class="panel-journey">
+      <div class="panel-journey-title">당신의 여정</div>
+      <div class="journey-step"><div class="step-num">1</div><div class="step-content"><div class="step-title">서명 & 관심사 등록</div><div class="step-desc">이름·이메일과 함께 가장 관심 있는 문제(스크린 독과점, 독립영화, Z세대 이탈 등)를 선택합니다.</div></div></div>
+      <div class="journey-step"><div class="step-num">2</div><div class="step-content"><div class="step-title">월간 뉴스레터 수신</div><div class="step-desc">매달 한국 영화 산업 수치 하나를 쉬운 언어로 받습니다. "이번 달 극장 관객이 8만 명 줄었습니다. 이유는 이것입니다." 당신의 서명이 어디에 쓰이고 있는지 트래킹합니다.</div></div></div>
+      <div class="journey-step"><div class="step-num">3</div><div class="step-content"><div class="step-title">마일스톤 참여</div><div class="step-desc">1,000명 달성 → CGV·롯데시네마 공개 서한에 서명자 명단 포함. 5,000명 달성 → 영화진흥위원회 제출 보고서에 데이터로 기여.</div></div></div>
+      <div class="journey-step"><div class="step-num">4</div><div class="step-content"><div class="step-title">캠페인 참여로 목소리 내기</div><div class="step-desc">#내가극장에간이유 캠페인에 참여해 개인의 경험을 데이터로 만듭니다. 가장 많이 공유된 이유가 REFRAME 정책 제안서에 인용됩니다.</div></div></div>
+    </div>
+    <div class="panel-benefits">
+      <div class="panel-benefits-title">당신이 받는 것</div>
+      <div class="benefit-item"><div class="benefit-icon">📬</div><div class="benefit-text"><strong>월간 산업 브리핑</strong>알기 쉬운 언어로 정리한 한국 영화 현황 레터. 내 서명이 어디에 쓰이고 있는지 포함.</div></div>
+      <div class="benefit-item"><div class="benefit-icon">🎟</div><div class="benefit-text"><strong>REFRAME 멤버 혜택</strong>월 5,000원 서포터 가입 시 독립영화 시사회 초청, 감독 GV 우선 예약, REFRAME 선정 월간 추천작.</div></div>
+      <div class="benefit-item"><div class="benefit-icon">📊</div><div class="benefit-text"><strong>내 서명의 영향 리포트</strong>마일스톤 달성 때마다 어떤 변화가 일어났는지 이메일로 수신. 추상적인 응원이 아닌 추적 가능한 기여.</div></div>
+      <div class="benefit-item"><div class="benefit-icon">🏷</div><div class="benefit-text"><strong>서명자 명단 공개</strong>동의 시 KOFIC 제출 문서와 언론 배포 자료에 서명자로 이름 포함.</div></div>
+    </div>
+  </div>
+
+  <!-- FILMMAKER -->
+  <div class="onboarding-panel" id="panel-filmmaker">
+    <div class="panel-journey">
+      <div class="panel-journey-title">당신의 여정</div>
+      <div class="journey-step"><div class="step-num">1</div><div class="step-content"><div class="step-title">서명 + 분야 등록</div><div class="step-desc">연출·제작·기획·배급 등 구체적인 역할과 현재 작업 단계를 등록합니다.</div></div></div>
+      <div class="journey-step"><div class="step-num">2</div><div class="step-content"><div class="step-title">분기별 라운드테이블 초대</div><div class="step-desc">서울 오프라인 모임에 초대됩니다. 여기서 나온 의견은 REFRAME 백서에 실명으로 수록됩니다. 자신의 목소리가 정책 문서에 남습니다.</div></div></div>
+      <div class="journey-step"><div class="step-num">3</div><div class="step-content"><div class="step-title">REFRAME 인증 영화 신청</div><div class="step-desc">스크린 다양성 기여, 신인 감독 지원 여부 등의 기준을 충족하면 REFRAME 인증 씰을 부여받습니다. 포스터·예고편에 사용 가능.</div></div></div>
+      <div class="journey-step"><div class="step-num">4</div><div class="step-content"><div class="step-title">공개 인터뷰 시리즈 참여</div><div class="step-desc">"지금 한국 영화 산업에서 가장 이상하다고 생각하는 것"을 솔직하게 말하는 유튜브 시리즈에 출연합니다. 바이럴 가능성 있는 콘텐츠 형식.</div></div></div>
+    </div>
+    <div class="panel-benefits">
+      <div class="panel-benefits-title">당신이 받는 것</div>
+      <div class="benefit-item"><div class="benefit-icon">📄</div><div class="benefit-text"><strong>백서 수록 & 크레딧</strong>연간 발간 시민 백서에 기여자로 실명 수록. 정책 레퍼런스 문서에 이름이 남습니다.</div></div>
+      <div class="benefit-item"><div class="benefit-icon">🏅</div><div class="benefit-text"><strong>REFRAME 인증 씰</strong>조건 충족 시 포스터·예고편에 삽입 가능한 인증 마크. 관객에게 "착한 영화" 신호.</div></div>
+      <div class="benefit-item"><div class="benefit-icon">🤝</div><div class="benefit-text"><strong>네트워크 접근</strong>분기별 라운드테이블에서 정책가·투자자·해외 배급사 연결 기회.</div></div>
+      <div class="benefit-item"><div class="benefit-icon">🎙</div><div class="benefit-text"><strong>콘텐츠 노출</strong>REFRAME 유튜브·SNS 채널을 통한 작품 및 프로젝트 소개.</div></div>
+    </div>
+  </div>
+
+  <!-- POLICY -->
+  <div class="onboarding-panel" id="panel-policy">
+    <div class="panel-journey">
+      <div class="panel-journey-title">당신의 여정</div>
+      <div class="journey-step"><div class="step-num">1</div><div class="step-content"><div class="step-title">서명 + 전문 분야 등록</div><div class="step-desc">정책, 법학, 경제, 문화콘텐츠 등 전문 분야를 등록합니다.</div></div></div>
+      <div class="journey-step"><div class="step-num">2</div><div class="step-content"><div class="step-title">데이터 패널 위촉</div><div class="step-desc">연 2회 발간하는 시민 백서의 기여 패널로 위촉됩니다. 보고서에 공동 저자 자격이 생깁니다.</div></div></div>
+      <div class="journey-step"><div class="step-num">3</div><div class="step-content"><div class="step-title">국회 연결 프로세스</div><div class="step-desc">문화체육관광위원회 소속 의원실에 백서 전달 및 공동 세미나 제안 과정에 전문가로 참여합니다.</div></div></div>
+      <div class="journey-step"><div class="step-num">4</div><div class="step-content"><div class="step-title">국제 포럼 참여</div><div class="step-desc">부산·베를린·칸 등 해외 영화제 사이드 이벤트에서 열리는 REFRAME 포럼에 패널로 초청받습니다.</div></div></div>
+    </div>
+    <div class="panel-benefits">
+      <div class="panel-benefits-title">당신이 받는 것</div>
+      <div class="benefit-item"><div class="benefit-icon">📑</div><div class="benefit-text"><strong>공동 저자 크레딧</strong>시민 백서 및 정책 제안서에 공동 저자로 이름 수록. 공신력 있는 출판 레퍼런스.</div></div>
+      <div class="benefit-item"><div class="benefit-icon">🏛</div><div class="benefit-text"><strong>정책 세미나 연결</strong>영화진흥위원회·국회 문화위 세미나에 전문가 패널로 참여 기회.</div></div>
+      <div class="benefit-item"><div class="benefit-icon">🌐</div><div class="benefit-text"><strong>국제 네트워크</strong>해외 영화산업 정책 연구자·기관과의 연결. 프랑스 CNC, 대만 영화기금 등 사례 공유 네트워크.</div></div>
+      <div class="benefit-item"><div class="benefit-icon">📊</div><div class="benefit-text"><strong>원시 데이터 접근</strong>REFRAME 수집 서명·캠페인 데이터에 연구 목적 접근 권한.</div></div>
+    </div>
+  </div>
+
+  <!-- INVESTOR -->
+  <div class="onboarding-panel" id="panel-investor">
+    <div class="panel-journey">
+      <div class="panel-journey-title">당신의 여정</div>
+      <div class="journey-step"><div class="step-num">1</div><div class="step-content"><div class="step-title">서명 + 관심 분야 등록</div><div class="step-desc">투자 규모, 관심 장르, 선호 단계(개발/제작/배급)를 등록합니다.</div></div></div>
+      <div class="journey-step"><div class="step-num">2</div><div class="step-content"><div class="step-title">프라이빗 딜플로우 접근</div><div class="step-desc">REFRAME이 검증한 독립영화 프로젝트 투자 기회를 일반 공개 전에 먼저 확인합니다.</div></div></div>
+      <div class="journey-step"><div class="step-num">3</div><div class="step-content"><div class="step-title">글로벌 매칭 참여</div><div class="step-desc">REFRAME 글로벌 공동제작 매칭 플랫폼을 통해 해외 배급사·투자자와 연결됩니다.</div></div></div>
+      <div class="journey-step"><div class="step-num">4</div><div class="step-content"><div class="step-title">REFRAME 인증 프로젝트 파트너</div><div class="step-desc">REFRAME 인증 기준을 충족하는 프로젝트에 투자 시 인증 파트너로 공동 마케팅 혜택을 받습니다.</div></div></div>
+    </div>
+    <div class="panel-benefits">
+      <div class="panel-benefits-title">당신이 받는 것</div>
+      <div class="benefit-item"><div class="benefit-icon">💼</div><div class="benefit-text"><strong>프라이빗 딜플로우</strong>REFRAME 검증 프로젝트 우선 접근. 일반 공개 전 2주 선행 정보.</div></div>
+      <div class="benefit-item"><div class="benefit-icon">🌏</div><div class="benefit-text"><strong>글로벌 배급 네트워크</strong>미국·유럽·동남아 배급사와의 매칭 플랫폼 접근. 해외 선판매 계약 중개.</div></div>
+      <div class="benefit-item"><div class="benefit-icon">🏷</div><div class="benefit-text"><strong>인증 파트너 크레딧</strong>REFRAME 인증 영화 포스터·마케팅 자료에 파트너로 노출.</div></div>
+      <div class="benefit-item"><div class="benefit-icon">📈</div><div class="benefit-text"><strong>산업 인텔리전스</strong>REFRAME 독점 수집 데이터 기반 분기별 산업 리포트 수신.</div></div>
+    </div>
+  </div>
+
+  <!-- STUDENT -->
+  <div class="onboarding-panel" id="panel-student">
+    <div class="panel-journey">
+      <div class="panel-journey-title">당신의 여정</div>
+      <div class="journey-step"><div class="step-num">1</div><div class="step-content"><div class="step-title">서명 + 소속 대학 등록</div><div class="step-desc">영화학과, 문화콘텐츠학과, 예술경영 등 전공과 대학교를 등록합니다.</div></div></div>
+      <div class="journey-step"><div class="step-num">2</div><div class="step-content"><div class="step-title">REFRAME 캠퍼스 챕터 개설</div><div class="step-desc">당신의 대학에 REFRAME 챕터를 만들 수 있습니다. 챕터는 자율적으로 지역 독립영화 상영회, 소규모 포럼을 열고 REFRAME은 콘텐츠와 네트워크를 지원합니다.</div></div></div>
+      <div class="journey-step"><div class="step-num">3</div><div class="step-content"><div class="step-title">#내가극장에간이유 캠페인 리더</div><div class="step-desc">학교 안에서 캠페인을 확산시킵니다. 가장 많은 참여를 이끌어낸 챕터에는 독립영화 시사회 공간 지원.</div></div></div>
+      <div class="journey-step"><div class="step-num">4</div><div class="step-content"><div class="step-title">영화 리터러시 콘텐츠 제작</div><div class="step-desc">REFRAME 유튜브 채널에 "이 장면에서 감독이 이 선택을 한 이유" 형식의 숏폼 콘텐츠를 기여합니다. 선발 시 제작비 지원.</div></div></div>
+    </div>
+    <div class="panel-benefits">
+      <div class="panel-benefits-title">당신이 받는 것</div>
+      <div class="benefit-item"><div class="benefit-icon">🏫</div><div class="benefit-text"><strong>캠퍼스 챕터 지원</strong>상영회·포럼 개최를 위한 콘텐츠 키트, 연사 연결, 소정의 운영비 지원.</div></div>
+      <div class="benefit-item"><div class="benefit-icon">🎬</div><div class="benefit-text"><strong>콘텐츠 제작 지원</strong>채택된 영화 리터러시 콘텐츠 제작비 지원 및 REFRAME 채널 노출.</div></div>
+      <div class="benefit-item"><div class="benefit-icon">🔗</div><div class="benefit-text"><strong>산업 네트워크 연결</strong>감독·제작자·정책가 라운드테이블 참관 기회. 졸업 후 커리어로 이어지는 연결.</div></div>
+      <div class="benefit-item"><div class="benefit-icon">📜</div><div class="benefit-text"><strong>활동 인증서</strong>챕터 운영, 캠페인 기여 활동에 대한 REFRAME 공식 인증서 발급.</div></div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- CAMPAIGN -->
+<section class="campaign" id="campaign">
+  <div class="section-tag">문화 캠페인</div>
+  <div class="campaign-grid">
+    <div>
+      <h2 class="campaign-headline fade-up">내가 극장에<br>간 이유는<br><em>단 하나였다</em></h2>
+      <span class="campaign-hashtag">#내가극장에간이유</span>
+      <p class="campaign-desc">거창한 산업 담론이 아닙니다. 개인의 감각적 기억을 모읍니다. 극장 티켓 사진과 함께 그 영화를 극장에서 봐야 했던 이유를 한 줄로 씁니다.<br><br>이 데이터가 실제로 "사람들이 극장에 오는 동기"를 보여주는 자료가 됩니다. 가장 많이 언급된 이유가 REFRAME 정책 제안서에 직접 인용됩니다.</p>
+      <p class="campaign-cta-note">SNS에 #내가극장에간이유 를 달아 공유하거나, 아래 카드에 직접 참여하세요.<br>현재까지 <strong style="color:var(--red);">1,204개</strong>의 이유가 모였습니다.</p>
+    </div>
+    <div class="testimonials">
+      <div class="testimonial">
+        <div class="testimonial-text">"혼자 보기 싫었어요. 이 영화는 누군가랑 같이 울어야 하는 영화인 걸 알았거든요."</div>
+        <div class="testimonial-film">— 〈자백〉 관람, 2024년 3월</div>
+        <div class="testimonial-meta"><span class="testimonial-author">서울 / 28세 / 직장인</span><span class="testimonial-tag">#집단감응</span></div>
+      </div>
+      <div class="testimonial">
+        <div class="testimonial-text">"이 감독 다음 영화가 만들어지려면 내가 극장에 가야 한다고 생각했습니다."</div>
+        <div class="testimonial-film">— 〈파묘〉 관람, 2024년 2월</div>
+        <div class="testimonial-meta"><span class="testimonial-author">부산 / 34세 / 영화 전공</span><span class="testimonial-tag">#지지로서의관람</span></div>
+      </div>
+      <div class="testimonial">
+        <div class="testimonial-text">"OTT로 보면 절반만 보는 느낌이 드는 영화가 있어요. 이건 스크린이어야 했습니다."</div>
+        <div class="testimonial-film">— 〈탈주〉 관람, 2024년 7월</div>
+        <div class="testimonial-meta"><span class="testimonial-author">대전 / 22세 / 대학생</span><span class="testimonial-tag">#스크린의이유</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="campaign-stats-row fade-up">
+    <div class="cstat"><div class="cstat-num">1,204</div><div class="cstat-label">참여 이유 수집</div></div>
+    <div class="cstat"><div class="cstat-num">38개</div><div class="cstat-label">대학 챕터 관심 등록</div></div>
+    <div class="cstat"><div class="cstat-num">12개</div><div class="cstat-label">언론 미디어 레퍼런스</div></div>
+    <div class="cstat"><div class="cstat-num">3편</div><div class="cstat-label">REFRAME 인증 대기 영화</div></div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- MEMBERSHIP -->
+<section class="membership" id="membership">
+  <div class="membership-header">
+    <div class="section-tag" style="justify-content:center;"><span style="flex:0 0 36px;height:1px;background:var(--gold);display:block;"></span><span style="color:var(--gold);">멤버십</span><span style="flex:0 0 36px;height:1px;background:var(--gold);display:block;"></span></div>
+    <h2 class="membership-headline fade-up">운동이 지속되려면<br><em>자체 수익 구조</em>가 있어야 합니다</h2>
+    <p class="membership-sub fade-up">후원에만 의존하면 언젠가 힘이 빠집니다. REFRAME 멤버십은 운동의 연료이자 관객이 받는 실질적 혜택입니다.<br><strong>5,000명의 서포터가 월 5,000원을 내면, 독립영화 한 편의 P&A 비용이 나옵니다.</strong></p>
+  </div>
+  <div class="plans fade-up">
+    <div class="plan">
+      <div class="plan-name">서포터</div>
+      <div class="plan-price">무료<span></span></div>
+      <div class="plan-period">서명만으로 참여</div>
+      <div class="plan-divider"></div>
+      <ul class="plan-features">
+        <li>월간 산업 브리핑 뉴스레터</li>
+        <li>마일스톤 알림 수신</li>
+        <li>#내가극장에간이유 캠페인 참여</li>
+        <li>서명자 명단 포함 (동의 시)</li>
+      </ul>
+      <button class="plan-btn">무료로 서명하기</button>
+    </div>
+    <div class="plan featured">
+      <div class="plan-badge">추천</div>
+      <div class="plan-name">멤버</div>
+      <div class="plan-price">5,000<span>원</span></div>
+      <div class="plan-period">월 구독 · 언제든 해지</div>
+      <div class="plan-divider"></div>
+      <ul class="plan-features">
+        <li class="highlight">독립영화 시사회 우선 초청</li>
+        <li class="highlight">감독 GV & 라운드테이블 참관</li>
+        <li class="highlight">REFRAME 선정 월간 추천작 스크리닝</li>
+        <li>파트너 극장·카페 할인 혜택</li>
+        <li>분기별 심층 리포트</li>
+        <li>서포터 전용 기능 모두 포함</li>
+      </ul>
+      <button class="plan-btn">멤버로 합류하기</button>
+    </div>
+    <div class="plan">
+      <div class="plan-name">프로</div>
+      <div class="plan-price">20,000<span>원</span></div>
+      <div class="plan-period">월 구독 · 영화인·학계·투자자</div>
+      <div class="plan-divider"></div>
+      <ul class="plan-features">
+        <li class="highlight">분기별 오프라인 라운드테이블</li>
+        <li class="highlight">백서 기여자 크레딧</li>
+        <li class="highlight">REFRAME 인증 신청 자격</li>
+        <li>프라이빗 딜플로우 (투자자)</li>
+        <li>원시 데이터 접근 (학계)</li>
+        <li>멤버 전용 기능 모두 포함</li>
+      </ul>
+      <button class="plan-btn">프로로 합류하기</button>
+    </div>
+  </div>
+  <p class="membership-note fade-up">현재 <strong>847명의 멤버</strong>가 이 운동을 지속시키고 있습니다. 5,000명이 되면 독립영화 P&A 펀드 1호가 가동됩니다.</p>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- POLICY TRACK -->
+<section class="policy-track" id="policy">
+  <div class="policy-header">
+    <div>
+      <div class="section-tag">정책 경로</div>
+      <h2 class="policy-headline fade-up">서명이<br><em>법이 되는</em><br>과정</h2>
+    </div>
+    <p class="policy-lead fade-up">
+      청원이 힘을 갖는 건 숫자가 쌓일 때입니다.<br><br>
+      REFRAME의 정책 전략은 단계적입니다. <strong>데이터를 발간하고, 국회에 연결하고, 국제 맥락을 붙입니다.</strong><br><br>
+      각 단계는 구체적인 결과물을 만듭니다. 추상적인 "운동"이 아닌 추적 가능한 압력입니다.
+    </p>
+  </div>
+  <div class="policy-steps fade-up">
+    <div class="policy-step">
+      <div class="policy-step-arrow">→</div>
+      <div class="policy-step-num">01</div>
+      <div class="policy-step-title">데이터 발간</div>
+      <div class="policy-step-desc">매년 "한국 영화 산업 시민 백서"를 발간합니다. 기존 영화진흥위원회 보고서와 다른 점은 관객과 독립영화인의 목소리를 담는다는 것입니다.</div>
+      <div class="policy-step-detail"><p><strong>산출물:</strong> 연간 백서, 언론 배포, 정책 어젠다 문서</p></div>
+    </div>
+    <div class="policy-step">
+      <div class="policy-step-arrow">→</div>
+      <div class="policy-step-num">02</div>
+      <div class="policy-step-title">국회 연결</div>
+      <div class="policy-step-desc">문화체육관광위원회 소속 의원실에 백서를 전달하고 공동 세미나를 제안합니다. "시민 5,000명의 서명이 담긴 보고서"는 무시할 수 없는 입력값입니다.</div>
+      <div class="policy-step-detail"><p><strong>목표:</strong> 홀드백 법제화 발의, 스크린 다양성 쿼터 조례</p></div>
+    </div>
+    <div class="policy-step">
+      <div class="policy-step-num">03</div>
+      <div class="policy-step-title">국제 연대</div>
+      <div class="policy-step-desc">프랑스 CNC 모델, 대만 영화산업 부흥 사례를 레퍼런스로 들어 국제적 맥락을 만듭니다. 부산·베를린·칸에서 사이드 이벤트 포럼을 엽니다.</div>
+      <div class="policy-step-detail"><p><strong>효과:</strong> 국내 정책 논의에 국제 무게감 부여</p></div>
+    </div>
+  </div>
+  <div class="intl-row fade-up">
+    <div>
+      <div class="intl-title">국제 레퍼런스</div>
+      <div class="intl-flags">
+        <div class="intl-flag active">🇫🇷 프랑스 CNC</div>
+        <div class="intl-flag active">🇹🇼 대만 영화기금</div>
+        <div class="intl-flag">🇩🇪 독일 FFA</div>
+        <div class="intl-flag">🇯🇵 일본 응원상영</div>
+        <div class="intl-flag">🇺🇸 선댄스 모델</div>
+      </div>
+    </div>
+    <div>
+      <p class="intl-desc">프랑스는 국립영화센터(CNC)를 통해 영화 티켓 수익의 일부를 독립영화 지원 펀드로 재순환시킵니다. 대만은 정부 주도 IP 육성과 해외 공동제작 지원으로 10년 만에 극장 관객을 회복했습니다. <strong>한국은 이미 콘텐츠 브랜드 자산을 갖추고 있습니다. 필요한 건 구조입니다.</strong></p>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- VISION -->
+<section class="vision">
+  <div class="vision-bg-lines"></div>
+  <div class="vision-content">
+    <div class="section-tag" style="justify-content:center;color:var(--gold);"><span style="flex:0 0 36px;height:1px;background:var(--gold);display:block;"></span>비전<span style="flex:0 0 36px;height:1px;background:var(--gold);display:block;"></span></div>
+    <h2 class="vision-tagline fade-up">
+      <div class="w1">한국 영화는</div>
+      <div class="w2">다시 켜진다</div>
+      <div class="w3">불꽃처럼</div>
+    </h2>
+    <p class="vision-body fade-up">기생충이 오스카를 받던 날, 우리는 가능성을 봤습니다.<br>그 가능성은 사라지지 않았습니다. 단지 구조가 따라오지 못했을 뿐입니다.<br><br>REFRAME은 서명이 데이터가 되고, 데이터가 정책이 되고,<br>정책이 스크린을 다시 켜는 운동입니다.</p>
+    <a href="#join" class="btn-primary" style="font-size:19px;padding:18px 56px;">지금 서명하기</a>
+  </div>
+</section>
+
+<!-- ROADMAP -->
+<section class="roadmap" id="roadmap">
+  <div class="section-tag">실행 로드맵</div>
+  <h2 class="diagnosis-headline fade-up" style="color:var(--black);">3년 안에<br><em>구조를 바꾼다</em></h2>
+  <div class="timeline">
+    <div class="timeline-item fade-up">
+      <div class="timeline-time"><div class="timeline-phase">Phase 1</div><div class="timeline-period">2025 — 진단과 연대</div></div>
+      <div class="timeline-content">
+        <div class="timeline-title">생태계 지도 그리기 & 서명 1,000명 달성</div>
+        <div class="timeline-desc">데이터 통합, 공개 포럼 시리즈 개최, 시민 백서 초안 발간. 서명 1,000명 달성 시 CGV·롯데시네마 공개 서한 발송. 대학 챕터 10개 개설.</div>
+        <div class="timeline-pills"><span class="pill">서명 1,000명</span><span class="pill">공개 포럼 3회</span><span class="pill">백서 초안</span><span class="pill">대학 챕터 10개</span></div>
+      </div>
+    </div>
+    <div class="timeline-item fade-up">
+      <div class="timeline-time"><div class="timeline-phase">Phase 2</div><div class="timeline-period">2026 — 파일럿 실험</div></div>
+      <div class="timeline-content">
+        <div class="timeline-title">서명 5,000명 → KOFIC 제출 + 파일럿 운영</div>
+        <div class="timeline-desc">서명 5,000명 달성 시 영화진흥위원회 공식 제출. 서울 3개 극장에서 '시네마 익스피리언스' 파일럿 운영. KCU IP 파일럿 2편 투자. 멤버십 수익으로 독립영화 P&A 펀드 1호 가동.</div>
+        <div class="timeline-pills"><span class="pill">서명 5,000명</span><span class="pill">KOFIC 제출</span><span class="pill">파일럿 극장 3곳</span><span class="pill">P&A 펀드 1호</span></div>
+      </div>
+    </div>
+    <div class="timeline-item fade-up">
+      <div class="timeline-time"><div class="timeline-phase">Phase 3</div><div class="timeline-period">2027 — 정책화와 확산</div></div>
+      <div class="timeline-content">
+        <div class="timeline-title">홀드백 법제화 발의 + KCU Vol.1 개봉</div>
+        <div class="timeline-desc">파일럿 결과 기반으로 홀드백 법제화, 스크린 다양성 쿼터 조례 제정 추진. 전국 20개 극장 확산. KCU 첫 번째 정식 작품 개봉. 부산영화제 REFRAME 포럼 정례화.</div>
+        <div class="timeline-pills"><span class="pill">홀드백 법제화</span><span class="pill">쿼터 조례</span><span class="pill">KCU Vol.1</span><span class="pill">전국 20개 극장</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- JOIN -->
+<section class="join" id="join">
+  <div class="join-content">
+    <div class="join-left">
+      <div class="section-tag" style="color:rgba(242,237,230,0.5);">서명하기</div>
+      <h2 class="join-headline fade-up">당신의 서명이<br>데이터가 됩니다</h2>
+      <p class="join-sub">이름을 남기는 게 아닙니다. 당신의 역할과 관심사가 정책 압력의 근거가 됩니다.</p>
+      <div class="join-promise">
+        <div class="join-promise-title">서명 이후 약속</div>
+        <div class="promise-item"><div class="promise-check">✓</div><div class="promise-text"><strong>월간 브리핑 수신</strong> 내 서명이 어디에 쓰이고 있는지 추적합니다</div></div>
+        <div class="promise-item"><div class="promise-check">✓</div><div class="promise-text"><strong>마일스톤 알림</strong> 1,000명·5,000명 달성 시 구체적으로 무슨 일이 벌어지는지 알려드립니다</div></div>
+        <div class="promise-item"><div class="promise-check">✓</div><div class="promise-text"><strong>역할별 온보딩</strong> 위에서 선택한 역할에 맞는 참여 경로로 연결됩니다</div></div>
+        <div class="promise-item"><div class="promise-check">✓</div><div class="promise-text"><strong>언제든 탈퇴 가능</strong> 구독이 아닙니다. 부담 없이 시작하세요</div></div>
+      </div>
+    </div>
+    <div class="join-form">
+      <div class="form-row">
+        <label>이름</label>
+        <input type="text" placeholder="홍길동" id="joinName">
+      </div>
+      <div class="form-row">
+        <label>이메일</label>
+        <input type="email" placeholder="your@email.com" id="joinEmail">
+      </div>
+      <div class="form-row">
+        <label>나의 역할 — 선택하면 참여 경로가 달라집니다</label>
+        <div class="join-roles-grid" id="joinRoleButtons">
+          <button class="role-btn" data-role="audience">관객 / 팬</button>
+          <button class="role-btn" data-role="filmmaker">영화인 / 기획자</button>
+          <button class="role-btn" data-role="policy">정책 / 학계</button>
+          <button class="role-btn" data-role="investor">투자자 / 사업가</button>
+          <button class="role-btn" data-role="student">대학생 / Z세대</button>
+          <button class="role-btn" data-role="other">기타</button>
+        </div>
+      </div>
+      <div class="role-preview" id="rolePreview">
+        <div class="role-preview-text">역할을 선택하면 서명 이후 어떤 여정이 펼쳐지는지 보여드립니다.</div>
+      </div>
+      <div class="form-row">
+        <label>가장 관심 있는 문제</label>
+        <select>
+          <option value="">선택하세요</option>
+          <option>스크린 독과점 해소</option>
+          <option>극장 경험 혁신</option>
+          <option>IP 생태계 구축</option>
+          <option>Z세대 관객 확보</option>
+          <option>글로벌 공동제작</option>
+          <option>독립영화 생태계</option>
+          <option>정책·법제 개선</option>
+        </select>
+      </div>
+      <button class="btn-join" id="joinBtn">서명하고 운동에 합류하기 →</button>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div>
+    <div class="footer-brand">RE<span>FRAME</span></div>
+    <p class="footer-tagline">서명이 데이터가 되고,<br>데이터가 정책이 되는<br>시민 압력 기구. 2025.</p>
+  </div>
+  <div class="footer-col">
+    <h4>탐색</h4>
+    <a href="#diagnosis">현황 진단</a>
+    <a href="#solutions">전략 제안</a>
+    <a href="#onboarding">참여 여정</a>
+    <a href="#campaign">문화 캠페인</a>
+    <a href="#membership">멤버십</a>
+    <a href="#roadmap">로드맵</a>
+  </div>
+  <div class="footer-col">
+    <h4>참고</h4>
+    <a href="#">영화진흥위원회 연간 보고서</a>
+    <a href="#">KOFIC 관객 행동 연구</a>
+    <a href="#">프랑스 CNC 정책 자료</a>
+    <a href="#">글로벌 극장 산업 동향</a>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 REFRAME Project — 예술경영 기반 영화 산업 혁신 제안</span>
+    <span>개인 호기심 기반 기획 연구 프로젝트</span>
+  </div>
+</footer>
+
+<script>
+// CURSOR
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursorRing');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{ mx=e.clientX; my=e.clientY; cursor.style.left=mx+'px'; cursor.style.top=my+'px'; });
+(function animR(){ rx+=(mx-rx)*0.12; ry+=(my-ry)*0.12; ring.style.left=rx+'px'; ring.style.top=ry+'px'; requestAnimationFrame(animR); })();
+document.querySelectorAll('a,button,.solution-item,.stat-card,.problem-cell,.plan,.testimonial').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{ cursor.style.transform='translate(-50%,-50%) scale(2)'; ring.style.width='58px'; ring.style.height='58px'; });
+  el.addEventListener('mouseleave',()=>{ cursor.style.transform='translate(-50%,-50%) scale(1)'; ring.style.width='34px'; ring.style.height='34px'; });
+});
+
+// FILM STRIP
+const strip = document.getElementById('filmStrip');
+const hCount = Math.ceil(window.innerHeight/26)+6;
+for(let i=0;i<hCount;i++) strip.innerHTML+='<div class="film-hole"></div>';
+
+// SCROLL ANIMATIONS
+const obs = new IntersectionObserver(entries=>{ entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); }); },{threshold:0.1});
+document.querySelectorAll('.fade-up').forEach(el=>obs.observe(el));
+
+// SIGNATURE BAR ANIMATE
+setTimeout(()=>{ document.getElementById('sigBarFill').style.width='76.9%'; },600);
+
+// COUNTER ANIMATION
+function animCount(el, target, duration=2000){
+  let start=0, startTime=null;
+  function step(ts){ if(!startTime) startTime=ts; const p=Math.min((ts-startTime)/duration,1); const val=Math.floor(p*target); el.textContent=val.toLocaleString(); if(p<1) requestAnimationFrame(step); }
+  requestAnimationFrame(step);
+}
+setTimeout(()=>{
+  const numEl=document.getElementById('sigNum');
+  numEl.innerHTML='<span>3</span>,<span id="counterSpan">0</span>';
+  animCount(document.getElementById('counterSpan'),847,2200);
+},700);
+
+// NAV SCROLL
+window.addEventListener('scroll',()=>{
+  const nav=document.getElementById('mainNav');
+  nav.style.background = window.scrollY>60 ? 'rgba(13,13,13,0.96)' : 'transparent';
+  nav.style.backdropFilter = window.scrollY>60 ? 'blur(14px)' : 'none';
+  nav.style.borderBottom = window.scrollY>60 ? '1px solid rgba(255,255,255,0.05)' : 'none';
+});
+
+// ROLE TABS
+document.querySelectorAll('.role-tab').forEach(tab=>{
+  tab.addEventListener('click',()=>{
+    document.querySelectorAll('.role-tab').forEach(t=>t.classList.remove('active'));
+    document.querySelectorAll('.onboarding-panel').forEach(p=>p.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('panel-'+tab.dataset.panel).classList.add('active');
+  });
+});
+
+// ROLE PREVIEW IN JOIN FORM
+const rolePreviews = {
+  audience: '<strong>관객 / 팬으로 참여</strong>월간 산업 브리핑 수신 → 마일스톤 참여 → #내가극장에간이유 캠페인으로 목소리 내기. 1,000명 달성 시 서명자 명단에 포함되어 극장사에 공개 서한이 발송됩니다.',
+  filmmaker: '<strong>영화인 / 기획자로 참여</strong>분기별 오프라인 라운드테이블 초대 → 시민 백서 실명 수록 → REFRAME 인증 씰 신청 자격. 자신의 목소리가 정책 문서에 남습니다.',
+  policy: '<strong>정책 / 학계로 참여</strong>데이터 패널 위촉 → 연간 백서 공동 저자 크레딧 → 국회 문화위 세미나 참여 → 국제 포럼 패널 초청.',
+  investor: '<strong>투자자 / 사업가로 참여</strong>프라이빗 딜플로우 우선 접근 → 글로벌 배급 매칭 플랫폼 → REFRAME 인증 파트너 공동 마케팅.',
+  student: '<strong>대학생 / Z세대로 참여</strong>캠퍼스 챕터 개설 지원 → 영화 리터러시 콘텐츠 제작비 지원 → 산업 네트워크 연결 → REFRAME 활동 인증서 발급.',
+  other: '<strong>모든 참여를 환영합니다</strong>역할과 무관하게 월간 브리핑 수신, 마일스톤 알림, 캠페인 참여가 가능합니다. 서명 이후 원하는 형태로 더 깊이 참여할 수 있습니다.'
+};
+document.querySelectorAll('#joinRoleButtons .role-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('#joinRoleButtons .role-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const preview=document.getElementById('rolePreview');
+    preview.querySelector('.role-preview-text').innerHTML = rolePreviews[btn.dataset.role]||'';
+    preview.style.borderLeftColor='rgba(242,237,230,0.6)';
+  });
+});
+
+// JOIN BUTTON
+document.getElementById('joinBtn').addEventListener('click',()=>{
+  const name=document.getElementById('joinName').value.trim();
+  const email=document.getElementById('joinEmail').value.trim();
+  const btn=document.getElementById('joinBtn');
+  if(!name||!email){ btn.textContent='이름과 이메일을 입력해 주세요'; btn.style.background='#333'; setTimeout(()=>{ btn.textContent='서명하고 운동에 합류하기 →'; btn.style.background=''; },2000); return; }
+  btn.textContent='✓ 서명 완료 — 마일스톤 알림을 이메일로 받으실 거예요';
+  btn.style.fontSize='13px'; btn.style.letterSpacing='0.5px'; btn.style.background='#111';
+  // Update counter
+  const navCount=document.getElementById('navCount');
+  navCount.textContent='3,848명';
+  setTimeout(()=>{ btn.textContent='서명하고 운동에 합류하기 →'; btn.style.fontSize=''; btn.style.letterSpacing=''; btn.style.background=''; },4000);
+});
+
+// PLAN BUTTONS
+document.querySelectorAll('.plan-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{ btn.textContent='→ 서명 섹션으로'; setTimeout(()=>{ document.getElementById('join').scrollIntoView({behavior:'smooth'}); btn.textContent=btn.textContent.includes('무료')? '무료로 서명하기' : btn.textContent.includes('멤버')? '멤버로 합류하기' : '프로로 합류하기'; },800); });
+});
+</script>
+</body>
+</html>
